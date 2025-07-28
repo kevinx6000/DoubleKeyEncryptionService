@@ -3,6 +3,7 @@
 namespace CustomerKeyStore
 {
     using System;
+    using System.Runtime.InteropServices;
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Logging;
@@ -21,9 +22,14 @@ namespace CustomerKeyStore
             .UseUrls($"http://0.0.0.0:{port}")
             .ConfigureLogging((context, logging) =>
             {
-                logging.AddEventLog(eventLogSettings =>
-                {
-                });
+                logging.ClearProviders();
+                logging.AddConsole();
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                    logging.AddEventLog(eventLogSettings =>
+                    {
+                    });
+                }
             });
         }
     }
